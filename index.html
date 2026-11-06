@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focus Pulse - Deep Work & Pomodoro Tracker</title>
+    <title>FocusPulse - Deep Work & Pomodoro Tracker</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -33,13 +33,11 @@
     <!-- Chart.js for statistics visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Smooth timer progress circle transitions */
         .timer-circle {
             transition: stroke-dashoffset 0.5s linear;
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
         }
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -83,7 +81,7 @@
         <div id="cloudStatusBadge" class="flex items-center justify-between text-xs px-3.5 py-1.5 rounded-xl bg-gray-200/50 dark:bg-gray-900 border border-gray-300/40 dark:border-gray-800 text-gray-600 dark:text-gray-400">
             <div class="flex items-center gap-2">
                 <span id="cloudStatusDot" class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                <span id="cloudStatusText">Connecting to Cloud Sync...</span>
+                <span id="cloudStatusText">Initializing Offline Store...</span>
             </div>
             <span id="userIdBadge" class="font-mono text-[10px] text-gray-400 truncate max-w-[150px] sm:max-w-none">--</span>
         </div>
@@ -105,9 +103,7 @@
         <!-- Timer Circle Container -->
         <div class="relative w-72 h-72 sm:w-80 sm:h-80 flex items-center justify-center">
             <svg class="w-full h-full" viewBox="0 0 100 100">
-                <!-- Background track -->
                 <circle cx="50" cy="50" r="44" stroke-width="4" class="stroke-gray-200 dark:stroke-gray-800" fill="none" />
-                <!-- Dynamic progress circle -->
                 <circle id="timerProgress" cx="50" cy="50" r="44" stroke-width="5" 
                         class="timer-circle stroke-rose-500" 
                         stroke-linecap="round" 
@@ -116,7 +112,6 @@
                         stroke-dashoffset="0" />
             </svg>
             
-            <!-- Timer Text Display -->
             <div class="absolute flex flex-col items-center justify-center text-center">
                 <span id="sessionTag" class="text-xs uppercase font-bold tracking-widest text-rose-500 dark:text-rose-400 mb-1">Deep Work</span>
                 <span id="timerDisplay" class="text-6xl sm:text-7xl font-extrabold tracking-tight font-mono text-gray-900 dark:text-white">25:00</span>
@@ -138,7 +133,7 @@
             </button>
         </div>
 
-        <!-- Daily Metric Highlights Cards -->
+        <!-- Metric Highlights Cards -->
         <div class="grid grid-cols-3 gap-3 w-full max-w-lg mt-4">
             <div class="bg-white dark:bg-gray-900 p-3.5 rounded-2xl border border-gray-100 dark:border-gray-800 text-center shadow-sm">
                 <div class="text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">Today</div>
@@ -154,7 +149,7 @@
             </div>
         </div>
 
-        <!-- Detailed Analytics & Logs Section -->
+        <!-- History & Chart Section -->
         <div class="w-full max-w-2xl bg-white dark:bg-gray-900 rounded-3xl p-5 border border-gray-100 dark:border-gray-800 shadow-sm mt-2">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-bold text-lg text-gray-900 dark:text-white flex items-center gap-2">
@@ -167,34 +162,30 @@
                 </div>
             </div>
 
-            <!-- Weekly Chart -->
             <div id="chartContainer" class="h-44 w-full">
                 <canvas id="weeklyChart"></canvas>
             </div>
 
-            <!-- Session History Logs Table (Hidden by default or toggled) -->
             <div id="logsContainer" class="hidden mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 max-h-56 overflow-y-auto">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-xs font-semibold uppercase text-gray-400 tracking-wider">Completed Sessions Log</span>
                     <button id="clearLogsBtn" class="text-xs text-rose-500 hover:underline">Clear History</button>
                 </div>
-                <ul id="sessionLogsList" class="space-y-2">
-                    <!-- Dynamic logs inserted here -->
-                </ul>
+                <ul id="sessionLogsList" class="space-y-2"></ul>
             </div>
         </div>
     </main>
 
     <!-- Footer -->
     <footer class="w-full text-center py-4 text-xs text-gray-400 dark:text-gray-600">
-        FocusPulse • Measure to Improve • Works offline & saves locally
+        FocusPulse • Offline-First Cloud Sync • Measure to Improve
     </footer>
 
     <!-- Settings Modal -->
     <div id="settingsModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
         <div class="bg-white dark:bg-gray-900 rounded-3xl p-6 w-full max-w-md shadow-xl border border-gray-100 dark:border-gray-800 mx-4">
             <div class="flex items-center justify-between mb-5">
-                <h3 class="font-bold text-lg text-gray-900 dark:text-white">Timer & Data Settings</h3>
+                <h3 class="font-bold text-lg text-gray-900 dark:text-white">Timer & Sync Settings</h3>
                 <button id="closeSettingsBtn" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
@@ -216,46 +207,45 @@
                 </div>
 
                 <div class="pt-2 border-t border-gray-100 dark:border-gray-800">
-                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Sound & Alerts</label>
+                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Sound Cue</label>
                     <div class="flex items-center justify-between py-1">
-                        <span class="text-sm text-gray-700 dark:text-gray-300">Sound Notification Cue</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Play Audio on Finish</span>
                         <input type="checkbox" id="settingSoundToggle" checked class="accent-rose-500 w-4 h-4">
                     </div>
                 </div>
 
                 <div class="pt-2 border-t border-gray-100 dark:border-gray-800">
-                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Backup & Restore</label>
+                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Manual Backup & Restore</label>
                     <div class="flex gap-2">
                         <button id="exportBtn" class="flex-1 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-xs font-semibold rounded-xl text-gray-700 dark:text-gray-300 transition">
-                            <i class="fa-solid fa-download mr-1"></i> Export Data
+                            <i class="fa-solid fa-download mr-1"></i> Export JSON
                         </button>
                         <button id="importBtn" class="flex-1 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-xs font-semibold rounded-xl text-gray-700 dark:text-gray-300 transition">
-                            <i class="fa-solid fa-upload mr-1"></i> Import Data
+                            <i class="fa-solid fa-upload mr-1"></i> Import JSON
                         </button>
                         <input type="file" id="importFileInput" class="hidden" accept=".json">
                     </div>
                 </div>
 
                 <div class="pt-2 border-t border-gray-100 dark:border-gray-800">
-                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Cloud User ID</label>
+                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Unique User Sync ID</label>
                     <input type="text" id="settingUserIdInput" readonly class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 rounded-xl text-xs font-mono text-gray-600 dark:text-gray-400 border border-transparent select-all">
-                    <p class="text-[10px] text-gray-400 mt-1">This ID connects your devices together in real-time.</p>
+                    <p class="text-[10px] text-gray-400 mt-1">Use this exact ID on other devices if you want to link your history.</p>
                 </div>
             </div>
 
             <button id="saveSettingsBtn" class="w-full mt-6 py-3 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-xl transition">
-                Save Changes
+                Save Settings
             </button>
         </div>
     </div>
 
-    <!-- Firebase SDK Imports -->
+    <!-- Firebase & Offline Sync Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase Configuration & Initialization
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pomodoro-focus-tracker';
         const firebaseConfig = typeof __firebase_config !== 'undefined' 
             ? JSON.parse(__firebase_config) 
@@ -268,22 +258,39 @@
                 appId: "1:123456789:web:demo"
             };
 
-        let app, db, auth;
+        let db, auth;
         let currentUser = null;
         let firestoreUnsubscribe = null;
         let isRemoteUpdate = false;
 
+        // Get or generate unique persistent local user ID
+        function getOrCreateUserId() {
+            let uid = localStorage.getItem('fp_unique_user_id');
+            if (!uid) {
+                uid = 'user_' + Math.random().toString(36.25, 36) + Date.now().toString(36);
+                localStorage.setItem('fp_unique_user_id', uid);
+            }
+            return uid;
+        }
+
+        const persistentUserId = getOrCreateUserId();
+
         try {
-            app = initializeApp(firebaseConfig);
+            const app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
         } catch (err) {
-            console.warn("Firebase Init Fallback:", err);
+            console.warn("Firebase Fallback Active:", err);
         }
 
         window.initCloudSync = async function() {
+            const userIdEl = document.getElementById('userIdBadge');
+            const userIdInput = document.getElementById('settingUserIdInput');
+            if (userIdEl) userIdEl.textContent = `ID: ${persistentUserId.slice(0, 10)}...`;
+            if (userIdInput) userIdInput.value = persistentUserId;
+
             if (!auth || !db) {
-                updateCloudBadge(false, "Local Storage Mode (Offline)");
+                updateCloudBadge(false, "Offline Storage Mode");
                 return;
             }
 
@@ -295,24 +302,27 @@
                     await signInAnonymously(auth);
                 }
             } catch (err) {
-                console.error("Firebase Auth error:", err);
-                updateCloudBadge(false, "Auth Failed - Local Mode");
+                console.error("Auth warning:", err);
+                updateCloudBadge(false, "Offline Mode (Cached)");
             }
 
             onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    currentUser = user;
-                    const userIdEl = document.getElementById('userIdBadge');
-                    const userIdInput = document.getElementById('settingUserIdInput');
-                    if (userIdEl) userIdEl.textContent = `ID: ${user.uid}`;
-                    if (userIdInput) userIdInput.value = user.uid;
-
-                    updateCloudBadge(true, "Cloud Sync Active");
-                    setupRealtimeListener(user.uid);
+                if (user || persistentUserId) {
+                    currentUser = user || { uid: persistentUserId };
+                    updateCloudBadge(true, navigator.onLine ? "Cloud Sync Active" : "Offline (Queued)");
+                    setupRealtimeListener(persistentUserId);
                 } else {
-                    currentUser = null;
                     updateCloudBadge(false, "Local Mode");
                 }
+            });
+
+            // Listen to online/offline connectivity events
+            window.addEventListener('online', () => {
+                updateCloudBadge(true, "Cloud Sync Active");
+                window.syncToCloud(); // Flush queue on reconnect
+            });
+            window.addEventListener('offline', () => {
+                updateCloudBadge(false, "Offline (Saving Locally)");
             });
         };
 
@@ -333,19 +343,23 @@
                     }
                     isRemoteUpdate = false;
                 } else {
-                    // Initialize cloud document with local state
                     window.syncToCloud();
                 }
             }, (error) => {
-                console.error("Firestore listener error:", error);
-                updateCloudBadge(false, "Sync Error");
+                console.warn("Sync listener warning:", error);
+                updateCloudBadge(false, "Offline Queue Active");
             });
         }
 
         window.syncToCloud = async function() {
-            if (!currentUser || !db || isRemoteUpdate) return;
+            if (!db || isRemoteUpdate) return;
+            if (!navigator.onLine) {
+                updateCloudBadge(false, "Offline (Queued Locally)");
+                return;
+            }
+
             try {
-                const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'userState');
+                const userDocRef = doc(db, 'artifacts', appId, 'users', persistentUserId, 'data', 'userState');
                 await setDoc(userDocRef, {
                     settings: window.getAppStateSettings(),
                     sessionLogs: window.getAppStateLogs(),
@@ -353,8 +367,8 @@
                 }, { merge: true });
                 updateCloudBadge(true, "Cloud Sync Active");
             } catch (err) {
-                console.error("Error writing to Firestore:", err);
-                updateCloudBadge(false, "Sync Failed");
+                console.error("Cloud push error:", err);
+                updateCloudBadge(false, "Sync Retry Pending");
             }
         };
 
@@ -363,34 +377,26 @@
             const statusText = document.getElementById('cloudStatusText');
             if (statusText) statusText.textContent = text;
             if (dot) {
-                if (isConnected) {
-                    dot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
-                } else {
-                    dot.className = "w-2 h-2 rounded-full bg-amber-500";
-                }
+                dot.className = isConnected ? "w-2 h-2 rounded-full bg-emerald-500 animate-pulse" : "w-2 h-2 rounded-full bg-amber-500";
             }
         }
     </script>
 
-    <!-- Application Script Logic -->
+    <!-- App Logic Script -->
     <script>
-        // State Management
         let settings = {
             workDuration: 25,
             breakDuration: 5,
             soundEnabled: true
         };
 
-        let currentMode = 'work'; // 'work' or 'break'
+        let currentMode = 'work';
         let timerInterval = null;
         let isRunning = false;
-        let timeRemaining = 25 * 60; // in seconds
+        let timeRemaining = 25 * 60;
         let totalDuration = 25 * 60;
-
-        // Data Store
         let sessionLogs = [];
 
-        // DOM Elements
         const timerDisplay = document.getElementById('timerDisplay');
         const sessionTag = document.getElementById('sessionTag');
         const targetLabel = document.getElementById('targetLabel');
@@ -427,7 +433,6 @@
 
         let weeklyChartInstance = null;
 
-        // Expose state getters/setters for Cloud Sync Module
         window.getAppStateSettings = () => settings;
         window.getAppStateLogs = () => sessionLogs;
 
@@ -447,7 +452,6 @@
             updateChart();
         };
 
-        // Initialize App
         function init() {
             loadSavedData();
             applyTheme();
@@ -462,7 +466,6 @@
             }
         }
 
-        // Local Storage Handling & Cloud Sync Trigger
         function loadSavedData() {
             const savedSettings = localStorage.getItem('fp_settings');
             if (savedSettings) {
@@ -491,26 +494,22 @@
             }
         }
 
-        // Web Audio Synthesizer sound cue (no external audio required)
         function playAlertSound() {
             if (!settings.soundEnabled) return;
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 if (!AudioContext) return;
                 const ctx = new AudioContext();
-
                 const now = ctx.currentTime;
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
 
                 osc.type = 'sine';
                 if (currentMode === 'work') {
-                    // Success chord chime for work end
-                    osc.frequency.setValueAtTime(523.25, now); // C5
-                    osc.frequency.setValueAtTime(659.25, now + 0.15); // E5
-                    osc.frequency.setValueAtTime(783.99, now + 0.30); // G5
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.setValueAtTime(659.25, now + 0.15);
+                    osc.frequency.setValueAtTime(783.99, now + 0.30);
                 } else {
-                    // Break finish chime
                     osc.frequency.setValueAtTime(659.25, now);
                     osc.frequency.setValueAtTime(523.25, now + 0.2);
                 }
@@ -521,11 +520,10 @@
 
                 osc.connect(gain);
                 gain.connect(ctx.destination);
-
                 osc.start(now);
                 osc.stop(now + 0.6);
             } catch (e) {
-                console.log('Audio playback error:', e);
+                console.log('Audio error:', e);
             }
         }
 
@@ -537,11 +535,10 @@
 
         function sendNotification(title, body) {
             if ("Notification" in window && Notification.permission === "granted") {
-                new Notification(title, { body, icon: 'https://cdn-icons-png.flaticon.com/512/3208/3208726.png' });
+                new Notification(title, { body });
             }
         }
 
-        // Timer Core Logic
         function resetTimerState() {
             clearInterval(timerInterval);
             isRunning = false;
@@ -573,11 +570,8 @@
             const seconds = timeRemaining % 60;
             const formatted = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
             timerDisplay.textContent = formatted;
-
-            // Update Window Title
             document.title = `${formatted} - ${currentMode === 'work' ? 'Focus' : 'Rest'} | FocusPulse`;
 
-            // Progress Circle Calculation (Stroke circumference ~276.46)
             const circumference = 2 * Math.PI * 44;
             const progress = timeRemaining / totalDuration;
             const offset = circumference - (progress * circumference);
@@ -621,7 +615,6 @@
             playAlertSound();
 
             if (currentMode === 'work') {
-                // Log completed work session
                 const sessionRecord = {
                     id: Date.now(),
                     date: new Date().toISOString(),
@@ -630,9 +623,7 @@
                 sessionLogs.push(sessionRecord);
                 saveData();
 
-                sendNotification("Deep Work Finished!", `Great job! You focused for ${settings.workDuration} mins. Time for a break!`);
-                
-                // Auto switch to break mode
+                sendNotification("Deep Work Finished!", `Great job! You focused for ${settings.workDuration} mins.`);
                 currentMode = 'break';
                 updateTabUI();
                 resetTimerState();
@@ -660,27 +651,19 @@
             }
         }
 
-        // Stats & Analytics Calculation
         function updateStatsUI() {
             const todayStr = new Date().toDateString();
-            
-            // Filter today's sessions
             const todayLogs = sessionLogs.filter(log => new Date(log.date).toDateString() === todayStr);
             const todayMins = todayLogs.reduce((acc, curr) => acc + curr.duration, 0);
             
             todayFocusTimeEl.textContent = `${todayMins} min`;
             todaySessionsEl.textContent = todayLogs.length;
-
-            // Calculate daily streak
             streakDaysEl.textContent = `${calculateStreak()} days`;
-
-            // Populate session history logs list
             renderLogsList();
         }
 
         function calculateStreak() {
             if (sessionLogs.length === 0) return 0;
-
             const dates = [...new Set(sessionLogs.map(log => new Date(log.date).toDateString()))]
                 .map(d => new Date(d))
                 .sort((a, b) => b - a);
@@ -689,14 +672,11 @@
             let checkDate = new Date();
             checkDate.setHours(0, 0, 0, 0);
 
-            // Check if user did work today or yesterday to preserve streak
             const latestDate = dates[0];
             latestDate.setHours(0, 0, 0, 0);
 
-            const diffTime = Math.abs(checkDate - latestDate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            if (diffDays > 1) return 0; // Streak broken
+            const diffDays = Math.ceil(Math.abs(checkDate - latestDate) / (1000 * 60 * 60 * 24));
+            if (diffDays > 1) return 0;
 
             let curr = latestDate;
             for (let d of dates) {
@@ -707,7 +687,6 @@
                     break;
                 }
             }
-
             return streak;
         }
 
@@ -719,7 +698,6 @@
             }
 
             const sorted = [...sessionLogs].sort((a, b) => new Date(b.date) - new Date(a.date));
-
             sorted.slice(0, 15).forEach(log => {
                 const dateObj = new Date(log.date);
                 const timeStr = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -738,7 +716,6 @@
             });
         }
 
-        // Chart.js Visual Breakdown
         function initChart() {
             const ctx = document.getElementById('weeklyChart').getContext('2d');
             const data = getPastSevenDaysData();
@@ -757,18 +734,10 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#9ca3af', font: { size: 10 } }
-                        },
-                        y: {
-                            grid: { color: 'rgba(156, 163, 175, 0.1)' },
-                            ticks: { color: '#9ca3af', font: { size: 10 } }
-                        }
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 } } },
+                        y: { grid: { color: 'rgba(156, 163, 175, 0.1)' }, ticks: { color: '#9ca3af', font: { size: 10 } } }
                     }
                 }
             });
@@ -785,25 +754,20 @@
         function getPastSevenDaysData() {
             const labels = [];
             const minutes = [];
-            
             for (let i = 6; i >= 0; i--) {
                 const d = new Date();
                 d.setDate(d.getDate() - i);
                 const dayStr = d.toDateString();
-                
                 labels.push(d.toLocaleDateString([], { weekday: 'short' }));
                 
                 const dayMins = sessionLogs
                     .filter(log => new Date(log.date).toDateString() === dayStr)
                     .reduce((acc, curr) => acc + curr.duration, 0);
-                
                 minutes.push(dayMins);
             }
-
             return { labels, minutes };
         }
 
-        // Theme toggle
         function applyTheme() {
             if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
@@ -812,7 +776,6 @@
             }
         }
 
-        // Events Wire-up
         function setupEventListeners() {
             startPauseBtn.addEventListener('click', toggleTimer);
             resetBtn.addEventListener('click', resetTimerState);
@@ -839,7 +802,6 @@
                 updateChart();
             });
 
-            // Settings modal behavior
             settingsBtn.addEventListener('click', () => {
                 settingsModal.classList.remove('hidden');
                 setTimeout(() => settingsModal.classList.remove('opacity-0'), 10);
@@ -861,7 +823,6 @@
                 closeSettings();
             });
 
-            // Logs toggle
             toggleLogsBtn.addEventListener('click', () => {
                 logsContainer.classList.toggle('hidden');
                 toggleLogsBtn.textContent = logsContainer.classList.contains('hidden') ? 'View History' : 'Hide History';
@@ -874,7 +835,6 @@
                 }
             });
 
-            // Import / Export Data
             exportBtn.addEventListener('click', () => {
                 const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ settings, logs: sessionLogs }));
                 const downloadAnchor = document.createElement('a');
@@ -894,24 +854,19 @@
                 reader.onload = (event) => {
                     try {
                         const parsed = JSON.parse(event.target.result);
-                        if (parsed.logs && Array.isArray(parsed.logs)) {
-                            sessionLogs = parsed.logs;
-                        }
-                        if (parsed.settings) {
-                            settings = parsed.settings;
-                        }
+                        if (parsed.logs && Array.isArray(parsed.logs)) sessionLogs = parsed.logs;
+                        if (parsed.settings) settings = parsed.settings;
                         saveData();
                         resetTimerState();
                         alert('Data imported successfully!');
                     } catch (err) {
-                        alert('Invalid JSON file payload.');
+                        alert('Invalid JSON backup file.');
                     }
                 };
                 reader.readAsText(file);
             });
         }
 
-        // Initialize on Load
         window.onload = init;
     </script>
 </body>
